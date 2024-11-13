@@ -58,10 +58,10 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 			# 変化が閾値を超えたら通知
 			if color_diff > color_change_threshold:
 				current_datetime = datetime.now()
-				previous_color = ave_color
+				previous_color = avg_color
 				print("色の変化を検出しました！")
 				print(f"色変化量: {color_diff}")
-				print(f"color: {ave_color}")
+				print(f"color: {avg_color}")
 				print("検知した日時:", current_datetime)
 
 			# 監視エリアの枠を表示
