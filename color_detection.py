@@ -24,7 +24,8 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 	cap = cv2.VideoCapture(video_url)
 	# 初期の基準色
 	initial_color = None
-	previous_color_diff = 0
+	previous_color = None
+	num = 0
 
 	# フレーム処理
 	try:
@@ -33,6 +34,11 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 			if not ret:
 				print("フレームの取得に失敗しました。接続を再試行します。")
 				break
+
+			# 処理の確認
+			num+=1
+			if num%1000 == 0:
+				print("processing...")
 
 			# 監視エリアの色を取得
 			x, y, w, h = monitor_area
@@ -43,28 +49,20 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 			if initial_color is None:
 				initial_color = avg_color
 				print(f"初期色: {initial_color}")
+				previous_color = initial_color
 
 			# 色の変化を計算
-			color_diff = np.sqrt(np.sum((np.array(avg_color) - np.array(initial_color)) ** 2))
-
-			# 初期色の時cntの初期化
-			if color_diff < 20:
-				cnt = 0
+			color_diff = np.sqrt(np.sum((np.array(avg_color) - np.array(previous_color)) ** 2))
+			# ini_color_diff = np.sqrt(np.sum((np.array(avg_color) - np.array(initial_color)) ** 2))
 
 			# 変化が閾値を超えたら通知
 			if color_diff > color_change_threshold:
-				if cnt == 0:
-					current_datetime = datetime.now()
-				if abs(color_diff - previous_color_diff) < min_change_for_notification: # 前回のcolor_diffと比べて変化が少なかった場合cntをあげる（色の安定化check）
-					cnt += 1
-					if cnt == 5:
-						print("色の変化を検出しました！通知を送信します。")
-						print(f"色変化量: {color_diff}")
-						print(f"color: {ave_color}")
-						print("検知した日時:", current_datetime)
-
-			# color_diffの保持
-			previous_color_diff = color_diff
+				current_datetime = datetime.now()
+				previous_color = ave_color
+				print("色の変化を検出しました！")
+				print(f"色変化量: {color_diff}")
+				print(f"color: {ave_color}")
+				print("検知した日時:", current_datetime)
 
 			# 監視エリアの枠を表示
 			if show:
