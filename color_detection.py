@@ -33,12 +33,14 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 			ret, frame = cap.read()
 			if not ret:
 				print("フレームの取得に失敗しました。接続を再試行します。")
-				break
+				time.sleep(0.5)
+				continue
 
 			# 処理の確認
 			num+=1
-			if num%1000 == 0:
-				print("processing...")
+			if num%10000 == 0:
+				log_datetime = datetime.now()
+				print(f"{log_datetime}: processing...")
 
 			# 監視エリアの色を取得
 			x, y, w, h = monitor_area
@@ -74,7 +76,7 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 					break
 
 			# 処理速度の調整
-			time.sleep(0.5)
+			time.sleep(0.1)
 
 	except KeyboardInterrupt:
 		print("プログラムを終了します。")
