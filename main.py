@@ -1,9 +1,5 @@
 # やること
-# 色変化中の安定化
-# 接続切れの対策
 # スプレットシートへの書き込み機能
-# 閾値などのハイパラ調整
-# 色の範囲を定める
 from color_detection import detect_color_change
 
 # YouTubeの動画URL
