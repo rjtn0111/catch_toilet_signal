@@ -5,6 +5,8 @@ import yt_dlp
 import time
 from datetime import datetime
 
+from logging_sheet import append_row_to_sheet
+
 def detect_color_change(url, monitor_area, color_change_threshold=50, min_change_for_notification=20, show=True):
 	# yt-dlpで動画のストリーミングURLを取得
 	ydl_opts = {
@@ -63,8 +65,16 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 				previous_color = avg_color
 				print("色の変化を検出しました！")
 				print(f"色変化量: {color_diff}")
-				print(f"color: {avg_color}")
+				print(f"B: {avg_color[0]}, G: {avg_color[1]}, R: {avg_color[2]}")
 				print("検知した日時:", current_datetime)
+				logging_data = [int(avg_color[0]), int(avg_color[1]), int(avg_color[2]), current_datetime]
+
+				# 後で整理する
+				dir_path = os.path.dirname(__file__) # 作業フォルダの取得
+				credentials_file_path=os.path.join(dir_path, "client_secret.json") # 認証用のJSONファイル
+				authorized_user_file_path=os.path.join(dir_path, "authorized_user.json") # 証明書の出力ファイル
+				sheet_url = "https://docs.google.com/spreadsheets/d/1lEYKDamoCxxGrjGxAPgFOCnPAYoEFbt6_kl_lkvmneI/edit?gid=0#gid=0"
+				append_row_to_sheet(sheet_url, logging_data, credentials_file_path, authorized_user_file_path)
 
 			# 監視エリアの枠を表示
 			if show:
@@ -76,7 +86,7 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 					break
 
 			# 処理速度の調整
-			time.sleep(0.1)
+			time.sleep(0.5)
 
 	except KeyboardInterrupt:
 		print("プログラムを終了します。")

@@ -1,6 +1,5 @@
-# やること
-# スプレットシートへの書き込み機能
 from color_detection import detect_color_change
+from logging_sheet import append_row_to_sheet
 
 # YouTubeの動画URL
 url = 'https://www.youtube.com/live/bPh0zpkiu74?si=iypxldiINNlMpaRo'
