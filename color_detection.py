@@ -62,12 +62,14 @@ def detect_color_change(url, monitor_area, color_change_threshold=50, min_change
 			# 変化が閾値を超えたら通知
 			if color_diff > color_change_threshold:
 				current_datetime = datetime.now()
+				date = current_datetime.strftime("%Y-%m-%d")
+				time = current_datetime.strftime("%H:%M:%S")
 				previous_color = avg_color
 				print("色の変化を検出しました！")
 				print(f"色変化量: {color_diff}")
 				print(f"B: {avg_color[0]}, G: {avg_color[1]}, R: {avg_color[2]}")
 				print("検知した日時:", current_datetime)
-				logging_data = [int(avg_color[0]), int(avg_color[1]), int(avg_color[2]), current_datetime]
+				logging_data = [int(avg_color[0]), int(avg_color[1]), int(avg_color[2]), date, time]
 
 				# 後で整理する
 				dir_path = os.path.dirname(__file__) # 作業フォルダの取得
